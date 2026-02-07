@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://cdn.jsdelivr.net/pyodide/v0.29.0/full/pyodide.js"></script>
+	<style>
+		canvas {
+			border: 5px solid black;
+		}
+	</style>
+</head>
+<body>
+	<!-- Use whatever canvas dimensions make sense for your project -->
+	<center>
+	<h1>IMPORTANT:</h1>
+	<p>please note that the game is running quite slow due to the</p>
+	<p>limitations of running it inside a browser, this does not</p>
+	<p>reflect how it runs natively</p>
+	<h2>Controls:</h2>
+	<p>Up: W / Up Arrow</p>
+	<p>Left: A / Left Arrow</p>
+	<p>Down: S / Down Arrow</p>
+	<p>Right: D / Right Arrow</p>
+	</center>
+	<center><canvas id="canvas" width="1024" height="1024"></canvas></center>
+	<center>
+	<h2>Instructions:</h2>
+	<p>Try to collect all of the pellets without</p>
+	<p>hitting any of the ghosts.</p>
+	</center>
+	<script>
+		async function setup() {
+			const canvas = document.getElementById("canvas");
+
+			const pyodide = await loadPyodide();
+			pyodide.canvas.setCanvas2D(canvas);
+
+			await pyodide.loadPackage([
+				"pygame-ce",
+				"requests",
+				"pillow",
+				"./pacman_game-1.0.0-py3-none-any.whl", // Can be a full or relative URL
+			]);
+
+			const mod = pyodide.pyimport("pacman_game.main");
+			mod.main(); // Replace 'main' with your entrypoint function
+		}
+
+		setup();
+	</script>
+</body>
+</html>

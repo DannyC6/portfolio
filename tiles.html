@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://cdn.jsdelivr.net/pyodide/v0.29.0/full/pyodide.js"></script>
+	<style>
+		canvas {
+			border: 5px solid black;
+		}
+	</style>
+</head>
+<body>
+	<center>
+	<h2>Controls:</h2>
+	<p>Collumn 1: A</p>
+	<p>Collumn 2: S</p>
+	<p>Collumn 3: K</p>
+	<p>Collumn 4: L</p>
+	</center>
+	<!-- Use whatever canvas dimensions make sense for your project -->
+	<center><canvas id="canvas" width="540" height="960"></canvas></center>
+	<center>
+	<h2>Instructions:</h2>
+	<p>press the key that corrosponds to the correct collumn</p>
+	<p>when the black tile is under the blue line</p>
+	<p>once the tile turns gray, you do the same for the next tile.</p>
+	<p>the speed of the tiles will slowly increase the further you get</p>
+	</center>
+	<script>
+		async function setup() {
+			const canvas = document.getElementById("canvas");
+
+			const pyodide = await loadPyodide();
+			pyodide.canvas.setCanvas2D(canvas);
+
+			await pyodide.loadPackage([
+				"pygame-ce",
+				"./piano_tiles_game-1.0.0-py3-none-any.whl", // Can be a full or relative URL
+			]);
+
+			const mod = pyodide.pyimport("piano_tiles_game.main");
+			mod.main(); // Replace 'main' with your entrypoint function
+		}
+
+		setup();
+	</script>
+</body>
+</html>
